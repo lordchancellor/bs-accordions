@@ -1,5 +1,6 @@
 /* Storage.js - Utilises the local storage API to save the collapse state of the accordions */
 
+
 var accordions = document.getElementsByClassName("accordion-toggle");
 var collapses = document.getElementsByClassName("accordion-body");
 var states = [];
@@ -47,7 +48,7 @@ function restoreState() {
         for (var j = 0; j < length; j++) {
             if (states[i].parentId === accordions[j].dataset.parent) {
                 if (states[i].collapsed && !accordions[j].classList.contains("collapsed")) {
-                    collapseGroup(states[i].parentId);
+                    collapseGroup('#' + states[i].id);
                 }
             }
         }
