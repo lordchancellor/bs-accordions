@@ -1,6 +1,5 @@
 /* Storage.js - Utilises the local storage API to save the collapse state of the accordions */
 
-
 var accordions = document.getElementsByClassName("accordion-toggle");
 var collapses = document.getElementsByClassName("accordion-body");
 var states = [];
@@ -22,7 +21,7 @@ function getStates() {
     for (var i = 0; i < accordions.length; i++) {
         states[i].id = collapses[i].id;
         states[i].parentId = accordions[i].dataset.parent;
-        
+
         if (accordions[i].classList.contains("collapsed")) {
             states[i].collapsed = true;
         }
@@ -43,7 +42,7 @@ function updateState() {
 //Check for accordions that were collapsed on last use and re-collapse now
 function restoreState() {
     var length = accordions.length;
-    
+
     for (var i = 0; i < length; i++) {
         for (var j = 0; j < length; j++) {
             if (states[i].parentId === accordions[j].dataset.parent) {
@@ -55,9 +54,11 @@ function restoreState() {
     }
 }
 
+//Collapse a group - using an external function in case of closure
 function collapseGroup(id) {
     console.log("Collapsing " + id);
     $(id).collapse();
+    toggle();
 }
 
 //Check whether local storage is available and make sure that ACCORDIONS and COLLAPSES are the same length
@@ -70,7 +71,7 @@ if (typeof(Storage) !== "undefined" && accordions.length === collapses.length) {
     Storage.prototype.getObj = function(key) {
         return JSON.parse(this.getItem(key));
     };
-    
+
     //Check if the local storage contains any collapse data, if not build the STATES array for first use
     if (localStorage.getObj("Accordions")) {
         //Check to make sure the local sorage contains the same number of collapses as the page. If not, re-build
@@ -78,7 +79,7 @@ if (typeof(Storage) !== "undefined" && accordions.length === collapses.length) {
             console.log("I will now simulate populating sections from the local storage. HRMMHP. Done.");
             populateStates();
             console.log("Retoring States...");
-            setTimeout(restoreState, 10);
+            setTimeout(restoreState, 1);
         }
         else {
             buildStates();
