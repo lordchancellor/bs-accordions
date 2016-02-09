@@ -2,73 +2,50 @@
 ** Primary Stylesheet for Sandbox 3.0 **
 ***************************************/
 html {
-    font-size: 16px; 
-}
+  font-size: 16px; }
 
-h1 {
-    margin-bottom: 25px; 
-}
+h3 {
+  margin-bottom: 25px; }
 
-.accordian .accordian-heading .accordian-toggle {
-    display: -moz-box;
-    -moz-box-orient: horizontal;
-    -moz-box-pack: center;
-    -moz-box-align: center;
-    display: -webkit-box;
-    -webkit-box-orient: horizontal;
-    -webkit-box-pack: center;
-    -webkit-box-align: center;
-    width: 100%; 
-}
-
-.accordian .accordian-heading .accordian-toggle .textElement {
+.accordion .accordion-heading .accordion-toggle {
+  display: -moz-box;
+  -moz-box-orient: horizontal;
+  -moz-box-pack: center;
+  -moz-box-align: center;
+  display: -webkit-box;
+  -webkit-box-orient: horizontal;
+  -webkit-box-pack: center;
+  -webkit-box-align: center;
+  width: 100%; }
+  .accordion .accordion-heading .accordion-toggle .textElement {
     font-size: 1.1rem;
     font-weight: 700;
     color: #666666;
-    padding: 0px 10px 0px 0px; 
-}
-
-.accordian .accordian-heading .accordian-toggle .lineElement {
+    padding: 0px 10px 0px 0px; }
+  .accordion .accordion-heading .accordion-toggle .lineElement {
     -moz-box-flex: 1;
     -webkit-box-flex: 1;
     border-bottom: 1px solid #999;
-    padding: 1px 0px; 
-}
-
-.accordian .accordian-heading .accordian-toggle .caretElement {
-    padding: 0px 10px; 
-}
-
-.accordian .accordian-heading .accordian-toggle .caretElement .fa {
-    color: #999; 
-}
-
-.accordian .accordian-heading .accordian-toggle:hover,
-.accordian .accordian-heading .accordian-toggle:focus {
-    text-decoration: none; 
-}
-
-.accordian .accordian-inner ul {
-    margin-top: 5px;
-    padding-left: 10px;
-    list-style-type: none; 
-}
-
-.accordian .accordian-inner ul .jobDetailLabel,
-.accordian .accordian-inner ul .attributeLabel {
+    padding: 1px 0px; }
+  .accordion .accordion-heading .accordion-toggle .caretElement {
+    padding: 0px 10px; }
+    .accordion .accordion-heading .accordion-toggle .caretElement .fa {
+      color: #999; }
+  .accordion .accordion-heading .accordion-toggle:hover, .accordion .accordion-heading .accordion-toggle:focus {
+    text-decoration: none; }
+.accordion .accordion-inner ul {
+  margin-top: 5px;
+  padding-left: 10px;
+  list-style-type: none; }
+  .accordion .accordion-inner ul .jobDetailLabel, .accordion .accordion-inner ul .attributeLabel {
     display: inline-block;
     width: 125px;
-    font-size: 1.1rem; 
-}
+    font-size: 1.1rem; }
+  .accordion .accordion-inner ul .attributeLabel {
+    width: auto; }
+  .accordion .accordion-inner ul a {
+    margin-left: -2px; }
+  .accordion .accordion-inner ul img {
+    width: 100px; }
 
-.accordian .accordian-inner ul .attributeLabel {
-    width: auto; 
-}
-
-.accordian .accordian-inner ul a {
-    margin-left: -2px; 
-}
-
-.accordian .accordian-inner ul img {
-    width: 100px; 
-}
+/*# sourceMappingURL=style.css.map */
