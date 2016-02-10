@@ -5,10 +5,23 @@ var collapses = document.getElementsByClassName("accordion-body");
 var states = [];
 var localStates = []; //An array for holding the states as they come out of localStorage, for comparison to the existing STATES array
 
-//Populate STATES with enough objects for each accordion
 function buildStates() {
+    //Populate STATES with enough objects for each accordion
     for (var i = 0; i < accordions.length; i++) {
         states.push(new Object());
+    }
+    
+    //Populate STATES with the current collapse state of the accordions
+    for (var i = 0; i < accordions.length; i++) {
+        states[i].id = collapses[i].id;
+        states[i].parentId = accordions[i].dataset.parent;
+
+        if (accordions[i].classList.contains("collapsed")) {
+            states[i].collapsed = true;
+        }
+        else {
+            states[i].collapsed = false;
+        }
     }
 }
 
@@ -19,7 +32,6 @@ function populateStates() {
     
     //Populate STATES with the elements found in THIS page
     buildStates();
-    getStates();
     
     //Compare STATES with LOCALSTATES and update any entries that differ
     syncStates(states, localStates, "load");
@@ -70,24 +82,25 @@ function syncStates(syncTo, syncFrom, direction) {
     }
 }
 
-//Populate STATES with the current collapse state of the accordions
-function getStates() {
+//UPDATE STATES
+function refreshStates() {
     for (var i = 0; i < accordions.length; i++) {
-        states[i].id = collapses[i].id;
-        states[i].parentId = accordions[i].dataset.parent;
-
-        if (accordions[i].classList.contains("collapsed")) {
-            states[i].collapsed = true;
-        }
-        else {
-            states[i].collapsed = false;
+        for (var j = 0; j < states.length; j++) {
+            if (accordions[i].dataset.parent === states[j].parentId) {
+                if (accordions[i].classList.contains("collapsed")) {
+                    states[j].collapsed = true;
+                }
+                else {
+                    states[j].collapsed = false;
+                }
+            }
         }
     }
 }
 
 //Called when accordions are toggled - updates localStorage with the current collapse state
-function updateState() {
-    setTimeout(getStates, 10);
+function updateStates() {
+    setTimeout(refreshStates, 10);
     setTimeout(function() {
         syncStates(localStates, states, "save");
     }, 10);
@@ -105,6 +118,7 @@ function restoreState() {
             if (states[i].parentId === accordions[j].dataset.parent) {
                 if (states[i].collapsed && !accordions[j].classList.contains("collapsed")) {
                     collapseGroup('#' + states[i].id);
+                    accordions[j].classList.add("collapsed");
                 }
             }
         }
