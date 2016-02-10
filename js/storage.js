@@ -3,6 +3,7 @@
 var accordions = document.getElementsByClassName("accordion-toggle");
 var collapses = document.getElementsByClassName("accordion-body");
 var states = [];
+var localStates = []; //An array for holding the states as they come out of localStorage, for comparison to the existing STATES array
 
 //Populate STATES with enough objects for each accordion
 function buildStates() {
@@ -11,9 +12,62 @@ function buildStates() {
     }
 }
 
-//Populate STATES with the data stored in local storage
+//Populate LOCALSTATES with the data stored in local storage
 function populateStates() {
-    states = localStorage.getObj("Accordions");
+    //Populate LOCALSTATES with the data stored in LOCALSTORAGE
+    localStates = localStorage.getObj("Accordions");
+    
+    //Populate STATES with the elements found in THIS page
+    buildStates();
+    getStates();
+    
+    //Compare STATES with LOCALSTATES and update any entries that differ
+    syncStates(states, localStates, "load");
+}
+
+//Sort through LOCALSTATES to find matching entries in STATES and copy the relevant data across
+function syncStates(syncTo, syncFrom, direction) {
+    switch (direction) {
+        case "load":
+            for (var i = 0; i < syncTo.length; i++) {
+                for (var j = 0; j < syncFrom.length; j++) {
+                    if (syncTo[i].id === syncFrom[j].id && syncTo[i].collapsed !== syncFrom[j].collapsed) {
+                        syncTo.splice(i, 1, syncFrom[j]);
+                        console.log("Updating " + syncFrom[j].id + ".");
+                    }
+                }
+            }
+            break;
+            
+        case "save":
+            for (var i = 0; i < syncFrom.length; i++) {
+                var match = false; //Control variable for positive matches - insert new element if no match found
+                
+                for (var j = 0; j < syncTo.length; j++) {
+                    if (syncFrom[i].id === syncTo[j].id && syncFrom[i].collapsed !== syncTo[j].collapsed) {
+                        console.log("Match found - updating record in localStates");
+                        syncTo.splice(j, 1, syncFrom[i]);
+                        match = true;
+                    }
+                    else if (syncFrom[i].id === syncTo[j].id && syncFrom[i].collapsed === syncTo[j].collapsed) {
+                        //If we have a match, but the collapse state is unchanged, there is no need to update
+                        match = true;
+                    }
+                }
+                
+                //If the entry does not already exist in LOCALSTATES we push it to the array
+                if (!match) {
+                    console.log("No match found, pushing new element to localStates");
+                    syncTo.push(syncFrom[i]);
+                    console.log("Added " + syncFrom[i] + " to localStates");
+                }
+            }
+            break;
+            
+        default:
+            console.error("Error in state synchronisation");
+            break;
+    }
 }
 
 //Populate STATES with the current collapse state of the accordions
@@ -35,7 +89,10 @@ function getStates() {
 function updateState() {
     setTimeout(getStates, 10);
     setTimeout(function() {
-        localStorage.setObj("Accordions", states);
+        syncStates(localStates, states, "save");
+    }, 10);
+    setTimeout(function() {
+        localStorage.setObj("Accordions", localStates);
     }, 10);
 }
 
@@ -74,16 +131,10 @@ if (typeof(Storage) !== "undefined" && accordions.length === collapses.length) {
 
     //Check if the local storage contains any collapse data, if not build the STATES array for first use
     if (localStorage.getObj("Accordions")) {
-        //Check to make sure the local sorage contains the same number of collapses as the page. If not, re-build
-        if (localStorage.getObj("Accordions").length === accordions.length) {
-            console.log("I will now simulate populating sections from the local storage. HRMMHP. Done.");
-            populateStates();
-            console.log("Retoring States...");
-            setTimeout(restoreState, 1);
-        }
-        else {
-            buildStates();
-        }
+        console.log("I will now simulate populating sections from the local storage. *HRRNNNN* Done.");
+        populateStates();
+        console.log("Retoring States...");
+        setTimeout(restoreState, 1);
     }
     else {
         buildStates();

@@ -48,4 +48,8 @@ h3 {
   .accordion .accordion-inner ul img {
     width: 100px; }
 
+a.btn {
+  margin-top: 20px;
+  margin-left: 20px; }
+
 /*# sourceMappingURL=style.css.map */
