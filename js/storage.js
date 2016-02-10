@@ -133,7 +133,7 @@ if (typeof(Storage) !== "undefined" && accordions.length === collapses.length) {
     if (localStorage.getObj("Accordions")) {
         console.log("I will now simulate populating sections from the local storage. *HRRNNNN* Done.");
         populateStates();
-        console.log("Retoring States...");
+        console.log("Restoring States...");
         setTimeout(restoreState, 1);
     }
     else {
