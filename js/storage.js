@@ -1,4 +1,4 @@
-/* Storage2.js - Utilising HTML5's local storage API to persist the collapse state of Bootstrap accordions */
+/* Storage.js - Utilising HTML5's local storage API to persist the collapse state of Bootstrap accordions */
 
 var headings = document.getElementsByClassName("accordion-toggle");
 var bodies = document.getElementsByClassName("accordion-body");
@@ -130,6 +130,7 @@ function collapseGroup(headingId, bodyId) {
 }
 
 //Called when accordions are toggled - updates LOCALSTORAGE with the current collapse state
+//Note - the function is called with a timeout, but requires an additional timeout, hence individual timeouts within the function
 function updateStates() {
     setTimeout(function() { refreshStates(); }, 10);
     setTimeout(function() { syncStates(states, statesLiaison, "save"); }, 10);
