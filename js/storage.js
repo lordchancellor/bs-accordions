@@ -1,93 +1,92 @@
-/* Storage.js - Utilises the local storage API to save the collapse state of the accordions */
+/* Storage2.js - Utilising HTML5's local storage API to persist the collapse state of Bootstrap accordions */
 
-var accordions = document.getElementsByClassName("accordion-toggle");
-var collapses = document.getElementsByClassName("accordion-body");
+var headings = document.getElementsByClassName("accordion-toggle");
+var bodies = document.getElementsByClassName("accordion-body");
 var states = [];
-var localStates = []; //An array for holding the states as they come out of localStorage, for comparison to the existing STATES array
+var statesLiaison = []; //This array will act as the go-between for STATES and LOCALSTORAGE
 
+//Build STATES for the first time
 function buildStates() {
-    //Populate STATES with enough objects for each accordion
-    for (var i = 0; i < accordions.length; i++) {
+    //Populate STATES with enough Objects for each collapse
+    for (var i = 0; i < headings.length; i++) {
         states.push(new Object());
     }
-    
-    //Populate STATES with the current collapse state of the accordions
-    for (var i = 0; i < accordions.length; i++) {
-        states[i].id = collapses[i].id;
-        states[i].parentId = accordions[i].dataset.parent;
 
-        if (accordions[i].classList.contains("collapsed")) {
+    //Populate STATES with the current collapse state of each element
+    for (var i = 0; i < headings.length; i++) {
+        states[i].headingId = headings[i].dataset.parent;
+        states[i].bodyId = "#" + bodies[i].id;
+        states[i].collapsed = false;
+
+        if (headings[i].classList.contains("collapsed")) {
             states[i].collapsed = true;
-        }
-        else {
-            states[i].collapsed = false;
         }
     }
 }
 
-//Populate LOCALSTATES with the data stored in local storage
+//Setup STATES with the data stored in LOCALSTORAGE
 function populateStates() {
-    //Populate LOCALSTATES with the data stored in LOCALSTORAGE
-    localStates = localStorage.getObj("Accordions");
-    
-    //Populate STATES with the elements found in THIS page
+    //Populate STATESLIAISON with the data stored in LOCALSTORAGE
+    statesLiaison = localStorage.getObj("Accordions");
+
+    //Populate STATES with the data from elements on THIS page
     buildStates();
-    
-    //Compare STATES with LOCALSTATES and update any entries that differ
-    syncStates(states, localStates, "load");
+
+    //Compare STATES with STATESLIAISON and update any entries that differ
+    syncStates(statesLiaison, states, "load");
 }
 
-//Sort through LOCALSTATES to find matching entries in STATES and copy the relevant data across
-function syncStates(syncTo, syncFrom, direction) {
+//Sync STATESLIAISON and STATES
+function syncStates(syncFrom, syncTo, direction) {
     switch (direction) {
         case "load":
             for (var i = 0; i < syncTo.length; i++) {
                 for (var j = 0; j < syncFrom.length; j++) {
-                    if (syncTo[i].id === syncFrom[j].id && syncTo[i].collapsed !== syncFrom[j].collapsed) {
+                    if (syncTo[i].bodyId === syncFrom[j].bodyId && syncTo[i].collapsed !== syncFrom[j].collapsed) {
                         syncTo.splice(i, 1, syncFrom[j]);
-                        console.log("Updating " + syncFrom[j].id + ".");
+                        console.log("Updating " + syncFrom[j].bodyId + ".");
                     }
                 }
             }
             break;
-            
+
         case "save":
             for (var i = 0; i < syncFrom.length; i++) {
-                var match = false; //Control variable for positive matches - insert new element if no match found
-                
+                var match = false; //Control variable for positive matches - insert a new element if no match found
+
                 for (var j = 0; j < syncTo.length; j++) {
-                    if (syncFrom[i].id === syncTo[j].id && syncFrom[i].collapsed !== syncTo[j].collapsed) {
-                        console.log("Match found - updating record in localStates");
-                        syncTo.splice(j, 1, syncFrom[i]);
+                    if (syncFrom[i].bodyId === syncTo[j].bodyId) {
+                        console.log("Match found");
                         match = true;
-                    }
-                    else if (syncFrom[i].id === syncTo[j].id && syncFrom[i].collapsed === syncTo[j].collapsed) {
-                        //If we have a match, but the collapse state is unchanged, there is no need to update
-                        match = true;
+
+                        if (syncFrom[i].collapsed !== syncTo[j].collapsed) {
+                            console.log("Updating record in statesLiaison");
+                            syncTo.splice(j, 1, syncFrom[i]);
+                        }
                     }
                 }
-                
-                //If the entry does not already exist in LOCALSTATES we push it to the array
+
+                //If entry does not exist in STATESLIAISON we push it to the array
                 if (!match) {
-                    console.log("No match found, pushing new element to localStates");
+                    console.log("No match found, pushing new element to statesLiaison");
                     syncTo.push(syncFrom[i]);
-                    console.log("Added " + syncFrom[i] + " to localStates");
+                    console.log("Added " + syncFrom[i].headingId + " to statesLiaison");
                 }
             }
             break;
-            
+
         default:
             console.error("Error in state synchronisation");
             break;
     }
 }
 
-//UPDATE STATES
+//Refresh the 'collapsed' property of STATES on any elements that have changed state
 function refreshStates() {
-    for (var i = 0; i < accordions.length; i++) {
+    for (var i = 0; i < headings.length; i++) {
         for (var j = 0; j < states.length; j++) {
-            if (accordions[i].dataset.parent === states[j].parentId) {
-                if (accordions[i].classList.contains("collapsed")) {
+            if (headings[i].dataset.parent === states[j].headingId) {
+                if (headings[i].classList.contains("collapsed")) {
                     states[j].collapsed = true;
                 }
                 else {
@@ -98,62 +97,69 @@ function refreshStates() {
     }
 }
 
-//Called when accordions are toggled - updates localStorage with the current collapse state
-function updateStates() {
-    setTimeout(refreshStates, 10);
-    setTimeout(function() {
-        syncStates(localStates, states, "save");
-    }, 10);
-    setTimeout(function() {
-        localStorage.setObj("Accordions", localStates);
-    }, 10);
-}
-
-//Check for accordions that were collapsed on last use and re-collapse now
-function restoreState() {
-    var length = accordions.length;
-
-    for (var i = 0; i < length; i++) {
-        for (var j = 0; j < length; j++) {
-            if (states[i].parentId === accordions[j].dataset.parent) {
-                if (states[i].collapsed && !accordions[j].classList.contains("collapsed")) {
-                    collapseGroup('#' + states[i].id);
-                    accordions[j].classList.add("collapsed");
+//Check for elements that were collapsed in a prior session and re-collapse now
+function restoreStates() {
+    for (var i = 0; i < headings.length; i++) {
+        for (var j = 0; j < states.length; j++) {
+            if (headings[i].dataset.parent === states[j].headingId) {
+                if (!headings[i].classList.contains("collapsed") && states[j].collapsed) {
+                    //This call needs some work
+                    collapseGroup(headings[i].dataset.parent, bodies[i].id);
                 }
             }
         }
     }
 }
 
-//Collapse a group - using an external function in case of closure
-function collapseGroup(id) {
-    console.log("Collapsing " + id);
-    $(id).collapse();
-    toggle();
+//Make the necessary attribute changes to collapse an element
+function collapseGroup(headingId, bodyId) {
+    //Set the appropriate element in HEADINGS to a collapsed state
+    for (var i = 0; i < headings.length; i++) {
+        if (headings[i].dataset.parent === headingId) {
+            headings[i].classList.add("collapsed");
+            headings[i].setAttribute("aria-expanded", "false");
+        }
+    }
+    
+    //Set the appropriate element in BODIES to a collapsed state
+    for (var j = 0; j < bodies.length; j++) {
+        if (bodies[j].id === bodyId) {
+            bodies[j].classList.remove("in");
+            bodies[j].setAttribute("aria-expanded","false");
+        }
+    }
 }
 
-//Check whether local storage is available and make sure that ACCORDIONS and COLLAPSES are the same length
-//(they should all be part of the same accordion-groups - if not then there is an error with the page build and this code will fail)
-if (typeof(Storage) !== "undefined" && accordions.length === collapses.length) {
+//Called when accordions are toggled - updates LOCALSTORAGE with the current collapse state
+function updateStates() {
+    setTimeout(function() { refreshStates(); }, 10); //Consider timeout 10
+    setTimeout(function() { syncStates(states, statesLiaison, "save"); }, 10); //Consider timeout 10
+    setTimeout(function() { localStorage.setObj("Accordions", statesLiaison); }, 10); //Consider timeout 10
+}
+
+
+//Check whether local storage is available and (as a precautionary step) that HEADINGS and BODIES are equal in length
+if (typeof(Storage) !== "undefined" && headings.length === bodies.length) {
     //OBJECT COMPATIBILITY FOR LOCAL STORAGE
     Storage.prototype.setObj = function(key, obj) {
         return this.setItem(key, JSON.stringify(obj));
-    };
+    }
     Storage.prototype.getObj = function(key) {
         return JSON.parse(this.getItem(key));
-    };
+    }
 
-    //Check if the local storage contains any collapse data, if not build the STATES array for first use
+    //Check if the local storage contains any collapse data, if not then build STATES for the first time
     if (localStorage.getObj("Accordions")) {
         console.log("I will now simulate populating sections from the local storage. *HRRNNNN* Done.");
         populateStates();
         console.log("Restoring States...");
-        setTimeout(restoreState, 1);
+        restoreStates(); //Consider adding a timeout
     }
     else {
         buildStates();
     }
 }
+
 else {
-    console.error("Collapse persistence not possible for this browser");
+    console.error("Collapse persistence not available for this browser.");
 }
