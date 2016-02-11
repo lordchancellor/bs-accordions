@@ -103,7 +103,6 @@ function restoreStates() {
         for (var j = 0; j < states.length; j++) {
             if (headings[i].dataset.parent === states[j].headingId) {
                 if (!headings[i].classList.contains("collapsed") && states[j].collapsed) {
-                    //This call needs some work
                     collapseGroup(headings[i].dataset.parent, bodies[i].id);
                 }
             }
@@ -132,9 +131,9 @@ function collapseGroup(headingId, bodyId) {
 
 //Called when accordions are toggled - updates LOCALSTORAGE with the current collapse state
 function updateStates() {
-    setTimeout(function() { refreshStates(); }, 10); //Consider timeout 10
-    setTimeout(function() { syncStates(states, statesLiaison, "save"); }, 10); //Consider timeout 10
-    setTimeout(function() { localStorage.setObj("Accordions", statesLiaison); }, 10); //Consider timeout 10
+    setTimeout(function() { refreshStates(); }, 10);
+    setTimeout(function() { syncStates(states, statesLiaison, "save"); }, 10);
+    setTimeout(function() { localStorage.setObj("Accordions", statesLiaison); }, 10);
 }
 
 
@@ -153,7 +152,7 @@ if (typeof(Storage) !== "undefined" && headings.length === bodies.length) {
         console.log("I will now simulate populating sections from the local storage. *HRRNNNN* Done.");
         populateStates();
         console.log("Restoring States...");
-        restoreStates(); //Consider adding a timeout
+        restoreStates();
     }
     else {
         buildStates();
