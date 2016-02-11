@@ -108,6 +108,9 @@ function restoreStates() {
             }
         }
     }
+
+    //Call the toggleCaret() function from triangles.js to ensure that collapsed elements have the correct disclosure triangle
+    toggle();
 }
 
 //Make the necessary attribute changes to collapse an element
