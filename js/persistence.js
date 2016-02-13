@@ -5,6 +5,18 @@ var bodies = document.getElementsByClassName("accordion-body");
 var states = [];
 var statesLiaison = []; //This array will act as the go-between for STATES and LOCALSTORAGE
 
+//Toggle the disclosure triangles on collapsible elements
+function toggleCaret() {
+    for (var i = 0; i < headings.length; i++) {
+        if (headings[i].classList.contains("collapsed")) {
+            headings[i].childNodes[3].childNodes[0].setAttribute("class", "fa fa-2x fa-caret-right");
+        }
+        else {
+            headings[i].childNodes[3].childNodes[0].setAttribute("class", "fa fa-2x fa-caret-down");
+        }
+    }
+}
+
 //Build STATES for the first time
 function buildStates() {
     //Populate STATES with enough Objects for each collapse
@@ -27,7 +39,7 @@ function buildStates() {
 //Setup STATES with the data stored in LOCALSTORAGE
 function populateStates() {
     //Populate STATESLIAISON with the data stored in LOCALSTORAGE
-    statesLiaison = localStorage.getObj("Accordions");
+    statesLiaison = localStorage.getObj("collapseStates");
 
     //Populate STATES with the data from elements on THIS page
     buildStates();
@@ -109,8 +121,8 @@ function restoreStates() {
         }
     }
 
-    //Call the toggleCaret() function from triangles.js to ensure that collapsed elements have the correct disclosure triangle
-    toggle();
+    //Ensure that collapsed elements have the correct disclosure triangle
+    toggleCaret();
 }
 
 //Make the necessary attribute changes to collapse an element
@@ -122,7 +134,7 @@ function collapseGroup(headingId, bodyId) {
             headings[i].setAttribute("aria-expanded", "false");
         }
     }
-    
+
     //Set the appropriate element in BODIES to a collapsed state
     for (var j = 0; j < bodies.length; j++) {
         if (bodies[j].id === bodyId) {
@@ -137,7 +149,8 @@ function collapseGroup(headingId, bodyId) {
 function updateStates() {
     setTimeout(function() { refreshStates(); }, 10);
     setTimeout(function() { syncStates(states, statesLiaison, "save"); }, 10);
-    setTimeout(function() { localStorage.setObj("Accordions", statesLiaison); }, 10);
+    setTimeout(function() { localStorage.setObj("collapseStates", statesLiaison); }, 10);
+    setTimeout(function() { toggleCaret(); }, 10);
 }
 
 
@@ -152,7 +165,7 @@ if (typeof(Storage) !== "undefined" && headings.length === bodies.length) {
     }
 
     //Check if the local storage contains any collapse data, if not then build STATES for the first time
-    if (localStorage.getObj("Accordions")) {
+    if (localStorage.getObj("collapseStates")) {
         console.log("I will now simulate populating sections from the local storage. *HRRNNNN* Done.");
         populateStates();
         console.log("Restoring States...");
