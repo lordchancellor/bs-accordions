@@ -1,6 +1,6 @@
-/***************************************
-** Primary Stylesheet for Sandbox 3.0 **
-***************************************/
+/*****************************************
+** Primary Stylesheet for BS Accordions **
+*****************************************/
 html {
   font-size: 16px; }
 
@@ -17,6 +17,8 @@ h3 {
   -webkit-box-pack: center;
   -webkit-box-align: center;
   width: 100%; }
+  .accordion .accordion-heading .accordion-toggle:hover, .accordion .accordion-heading .accordion-toggle:focus {
+    text-decoration: none; }
   .accordion .accordion-heading .accordion-toggle .textElement {
     font-size: 1.1rem;
     font-weight: 700;
@@ -25,14 +27,12 @@ h3 {
   .accordion .accordion-heading .accordion-toggle .lineElement {
     -moz-box-flex: 1;
     -webkit-box-flex: 1;
-    border-bottom: 1px solid #999;
+    border-bottom: 1px solid #999999;
     padding: 1px 0px; }
   .accordion .accordion-heading .accordion-toggle .caretElement {
     padding: 0px 10px; }
     .accordion .accordion-heading .accordion-toggle .caretElement .fa {
-      color: #999; }
-  .accordion .accordion-heading .accordion-toggle:hover, .accordion .accordion-heading .accordion-toggle:focus {
-    text-decoration: none; }
+      color: #999999; }
 .accordion .accordion-inner ul {
   margin-top: 5px;
   padding-left: 10px;
@@ -45,10 +45,8 @@ h3 {
     width: auto; }
   .accordion .accordion-inner ul a {
     margin-left: -2px; }
-  .accordion .accordion-inner ul img {
-    width: 100px; }
 
-a.btn {
+.buttonWrapper {
   margin-top: 20px;
   margin-left: 20px; }
 
