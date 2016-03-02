@@ -4,6 +4,15 @@
 html {
   font-size: 16px; }
 
+.btn-github {
+  background: #333333;
+  border: 1px solid #222222;
+  color: #ffffff; }
+  .btn-github:hover, .btn-github:focus {
+    background: #222222;
+    border-color: #111111;
+    color: #ffffff; }
+
 h3 {
   margin-bottom: 25px; }
 
@@ -47,7 +56,14 @@ h3 {
     margin-left: -2px; }
 
 .buttonWrapper {
+  margin-bottom: 20px;
   margin-top: 20px;
-  margin-left: 20px; }
+  display: flex;
+  align-content: center;
+  justify-content: center; }
+  .buttonWrapper .btn-primary {
+    margin-right: 4px; }
+  .buttonWrapper .btn-github {
+    margin-left: 4px; }
 
 /*# sourceMappingURL=style.css.map */

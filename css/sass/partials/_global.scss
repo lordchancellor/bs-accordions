@@ -3,3 +3,16 @@
 html {
   font-size: 16px;
 }
+
+.btn-github {
+    background: $github;
+    border: 1px solid $githubBorder;
+    color: $whiteText;
+    
+    &:hover,
+    &:focus {
+        background: $githubShade;
+        border-color: $githubBorderShade;
+        color: $whiteText;
+    }
+}

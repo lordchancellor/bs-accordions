@@ -71,6 +71,17 @@ h3 {
 }
 
 .buttonWrapper {
-    margin-top: 20px;
-    margin-left: 20px;
+    @include marginY(20px);
+    display: flex;
+    align-content: center;
+    justify-content: center;
+
+    .btn-primary {
+        margin-right: 4px;
+    }
+        
+    .btn-github {
+        margin-left: 4px;
+    }
 }
+
