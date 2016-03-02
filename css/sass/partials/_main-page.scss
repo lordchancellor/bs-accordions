@@ -7,15 +7,9 @@ h3 {
 .accordion {
     .accordion-heading {
         .accordion-toggle {
-            display: -moz-box;
-            -moz-box-orient: horizontal;
-            -moz-box-pack: center;
-            -moz-box-align: center;
-            display: -webkit-box;
-            -webkit-box-orient: horizontal;
-            -webkit-box-pack: center;
-            -webkit-box-align: center;
-            width: 100%;
+            display: flex;
+            align-items: center;
+            //width: 100%;
             
             &:hover,
             &:focus {
@@ -23,6 +17,8 @@ h3 {
             }
             
             .textElement {
+                flex-shrink: 0;
+                flex-grow: 0;
                 font-size: 1.1rem;
                 font-weight: 700;
                 color: $darkText;
@@ -30,17 +26,18 @@ h3 {
             }
             
             .lineElement {
-                -moz-box-flex: 1;
-                -webkit-box-flex: 1;
+                flex-grow: 1;
                 border-bottom: 1px solid $charcoalText;
-                padding: 1px 0px;
+                padding: 1px 0;
             }
             
             .caretElement {
-                padding: 0px 10px;
+                flex-basis: 20px;
+                text-align: center;
                 
                 .fa {
                     color: $charcoalText;
+                    font-size: 1.6rem;
                 }
             }
         }
