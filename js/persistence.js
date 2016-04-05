@@ -154,6 +154,18 @@ function updateStates() {
 }
 
 
+//Add click event listeners to the accordion toggles
+if(addEventListener) {
+	for (var i = 0; i < headings.length; i++) {
+		headings[i].addEventListener("click", updateStates, false);
+	}
+}
+else {
+	for (var i = 0; i < headings.length; i++) {
+		headings[i].attachEvent("onclick", updateStates);
+	}
+}
+
 //Check whether local storage is available and (as a precautionary step) that HEADINGS and BODIES are equal in length
 if (typeof(Storage) !== "undefined" && headings.length === bodies.length) {
     //OBJECT COMPATIBILITY FOR LOCAL STORAGE
